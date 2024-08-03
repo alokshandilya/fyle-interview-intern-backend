@@ -21,6 +21,7 @@ pip install -r requirements.txt
 alias rest='rm core/store.sqlite3 -f && export FLASK_APP=core/server.py && flask db upgrade -d core/migrations'
 alias resttest='rm core/store.sqlite3 -f && export FLASK_APP=core/server.py && flask db upgrade -d core/migrations && pytest -vvv -s tests/'
 ```
+
 - `rest` to reset the database, will be helpful to test via `postman`
 - `resttest` to reset the database and run tests
 
@@ -36,3 +37,10 @@ bash run.sh
 # pytest --cov
 # open htmlcov/index.html
 ```
+
+## Starting point
+
+![5_of_18](https://github.com/user-attachments/assets/9b9dcab6-eefe-4a17-a989-81a0bb37d232)
+
+- $5$ tests are passing
+- task detail : [link](./Application.md)
