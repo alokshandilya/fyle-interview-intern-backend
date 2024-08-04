@@ -38,15 +38,11 @@ def regrade_assignment(p, incoming_payload):
     if assignment.state == AssignmentStateEnum.DRAFT:
         return APIResponse.respond(data="Cannot grade an assignment in Draft state", status=400)
 
-    try:
-        regraded_assignment = Assignment.mark_grade(
-            _id=regrade_assignment_payload.id,
-            grade=regrade_assignment_payload.grade,
-            auth_principal=p
-        )
-        db.session.commit()
-        regraded_assignment_dump = AssignmentSchema().dump(regraded_assignment)
-        return APIResponse.respond(data=regraded_assignment_dump)
-    except Exception as e:
-        db.session.rollback()
-        return APIResponse.respond(data=str(e), status=400)
+    regraded_assignment = Assignment.mark_grade(
+        _id=regrade_assignment_payload.id,
+        grade=regrade_assignment_payload.grade,
+        auth_principal=p
+    )
+    db.session.commit()
+    regraded_assignment_dump = AssignmentSchema().dump(regraded_assignment)
+    return APIResponse.respond(data=regraded_assignment_dump)
