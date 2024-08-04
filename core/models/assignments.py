@@ -78,6 +78,8 @@ class Assignment(db.Model):
     def mark_grade(cls, _id, grade, auth_principal: AuthPrincipal):
         assignment = Assignment.get_by_id(_id)
         assertions.assert_found(assignment, 'No assignment with this id was found')
+        # only allows the assigned teacher to grade the assignment,
+        assertions.assert_valid(assignment.teacher_id == auth_principal.teacher_id, 'this assignment belongs to some other teacher')
         assertions.assert_valid(grade is not None, 'assignment with empty grade cannot be graded')
 
         assignment.grade = grade
