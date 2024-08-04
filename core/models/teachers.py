@@ -12,6 +12,6 @@ class Teacher(db.Model):
     def __repr__(self):
         return '<Teacher %r>' % self.id
 
-    @classmethod
-    def get_all_teachers(cls):
-        return cls.query.all()
+    # @classmethod
+    # def get_all_teachers(cls):
+    #     return cls.query.all()
