@@ -2,7 +2,7 @@ from flask import Blueprint
 from core import db
 from core.apis import decorators
 from core.apis.responses import APIResponse
-from core.models.assignments import Assignment
+from core.models.assignments import Assignment, AssignmentStateEnum
 from core.models.teachers import Teacher
 
 from .schema import AssignmentSchema, AssignmentGradeSchema, TeacherSchema
@@ -34,13 +34,19 @@ def regrade_assignment(p, incoming_payload):
     """Re-grade an assignment already graded by a teacher"""
     regrade_assignment_payload = AssignmentGradeSchema().load(incoming_payload)
 
+    assignment = Assignment.query.get(regrade_assignment_payload.id)
+    if assignment.state == AssignmentStateEnum.DRAFT:
+        return APIResponse.respond(data="Cannot grade an assignment in Draft state", status=400)
+
     try:
         regraded_assignment = Assignment.mark_grade(
             _id=regrade_assignment_payload.id,
             grade=regrade_assignment_payload.grade,
-            auth_principal=p)
-    except ValueError as e:
-        return APIResponse.respond(error=str(e), status=400)
-
-    regraded_assignment_dump = AssignmentSchema().dump(regraded_assignment)
-    return APIResponse.respond(data=regraded_assignment_dump)
+            auth_principal=p
+        )
+        db.session.commit()
+        regraded_assignment_dump = AssignmentSchema().dump(regraded_assignment)
+        return APIResponse.respond(data=regraded_assignment_dump)
+    except Exception as e:
+        db.session.rollback()
+        return APIResponse.respond(data=str(e), status=400)

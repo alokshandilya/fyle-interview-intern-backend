@@ -4,7 +4,6 @@ from core.apis.decorators import AuthPrincipal
 from core.libs import helpers, assertions
 from core.models.teachers import Teacher
 from core.models.students import Student
-from core.models.principals import Principal
 from sqlalchemy.types import Enum as BaseEnum
 
 
@@ -79,19 +78,24 @@ class Assignment(db.Model):
         assignment = Assignment.get_by_id(_id)
         assertions.assert_found(assignment, 'No assignment with this id was found')
         assertions.assert_valid(grade is not None, 'Assignment with empty grade cannot be graded')
-
-        # Modified to ensure only the correct teacher can grade the assignment
-        assertions.assert_valid(
-            assignment.teacher_id == auth_principal.teacher_id,
-            'You are not authorized to grade this assignment'
-        )
-        assertions.assert_valid(assignment.state == AssignmentStateEnum.SUBMITTED,
-                                'Only submitted assignments can be graded')
-
+    
+        # if the user is principal
+        if auth_principal.principal_id:
+            # principal can grade or re-grade
+            pass
+        else:
+            # ensure only the correct teacher can grade the assignment
+            assertions.assert_valid(
+                assignment.teacher_id == auth_principal.teacher_id,
+                'You are not authorized to grade this assignment'
+            )
+            assertions.assert_valid(assignment.state == AssignmentStateEnum.SUBMITTED,
+                                    'Only submitted assignments can be graded')
+    
         assignment.grade = grade
         assignment.state = AssignmentStateEnum.GRADED
         db.session.commit()
-
+    
         return assignment
 
     @classmethod
