@@ -49,3 +49,8 @@ bash run.sh
 ## Ending point
 
 ![20240804_22h50m02s_grim](https://github.com/user-attachments/assets/c41cf2ec-8d21-42ff-8de3-06fa006f969e)
+
+![20240805_06h04m08s_grim](https://github.com/user-attachments/assets/bca25ce8-6caa-45be-993b-105ea9ea59e6)
+
+![20240805_06h05m46s_grim](https://github.com/user-attachments/assets/b4003462-16dd-4169-9580-b1cd048eb18f)
+
